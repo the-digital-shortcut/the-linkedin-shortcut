@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The LinkedIn Shortcut</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --grey:#AAAAAA;
+  --border:1px solid #AAAAAA;
+  --bg:#000;
+  --white:#fff;
+  --c0:#007BFF;
+  --c1:#8A2BE2;
+  --c2:#FF4500;
+  --c3:#32CD32;
+}
+body{background:var(--bg);color:var(--white);font-family:'Inter',Helvetica,sans-serif;min-height:100vh}
+.hdr{border-bottom:var(--border);display:grid;grid-template-columns:1fr auto}
+.hdr-left{padding:3rem 2.5rem 2.5rem;border-right:var(--border);display:flex;flex-direction:column;justify-content:space-between}
+.hdr-left-top{}
+.hdr-left-bottom{display:flex;justify-content:flex-end;padding-top:1.5rem}
+.builder-link{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:11px;color:var(--grey);letter-spacing:.8px;text-transform:uppercase;text-decoration:none;border-bottom:1px solid #444;padding-bottom:2px;transition:color .15s,border-color .15s}
+.builder-link:hover{color:var(--white);border-color:var(--white)}
+.hdr-right{padding:2rem 2.5rem;display:flex;flex-direction:column;justify-content:flex-end;gap:1rem;min-width:200px}
+.title{font-size:62px;font-weight:900;letter-spacing:-3px;line-height:.95;color:var(--white);text-transform:uppercase}
+.subtitle{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:13px;color:var(--grey);line-height:1.7;margin-top:1rem;max-width:520px}
+.meta-tag{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:11px;color:var(--grey);letter-spacing:1px;text-transform:uppercase}
+.meta-val{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11px;color:var(--white);letter-spacing:.5px;text-transform:uppercase}
+.meta-row{display:flex;flex-direction:column;gap:3px;border-bottom:var(--border);padding-bottom:1rem}
+.meta-row:last-child{border-bottom:none;padding-bottom:0}
+.nav{border-bottom:var(--border);display:flex}
+.tab-btn{flex:1;background:transparent;border:none;border-right:var(--border);padding:16px 20px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:var(--grey);cursor:pointer;transition:color .15s;text-align:left;display:flex;flex-direction:column;gap:5px}
+.tab-btn:last-child{border-right:none}
+.tab-btn:hover .tab-name{color:var(--white)}
+.tab-num{font-size:10px;font-weight:300;color:var(--grey);letter-spacing:.5px}
+.tab-name{color:var(--grey);transition:color .15s}
+.tab-btn.active.c0 .tab-name{color:var(--c0)}
+.tab-btn.active.c1 .tab-name{color:var(--c1)}
+.tab-btn.active.c2 .tab-name{color:var(--c2)}
+.tab-btn.active.c3 .tab-name{color:var(--c3)}
+.search-row{border-bottom:var(--border);display:grid;grid-template-columns:auto 1fr}
+.search-lbl{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:11px;color:var(--grey);letter-spacing:1.2px;text-transform:uppercase;padding:0 2rem;display:flex;align-items:center;border-right:var(--border)}
+.search-input{background:transparent;border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:14px;color:var(--white);padding:15px 2.5rem;letter-spacing:.2px;width:100%}
+.search-input::placeholder{color:#555}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.card{border-bottom:var(--border);display:grid;grid-template-columns:56px 1fr}
+.card-aside{border-right:var(--border);display:flex;align-items:flex-start;justify-content:center;padding-top:2.5rem}
+.card-num-vert{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:10px;color:var(--grey);letter-spacing:1px;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);text-transform:uppercase}
+.card-body{padding:2.5rem}
+.card-cat{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:10.5px;color:var(--grey);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:.5rem}
+.card-title{font-size:26px;font-weight:700;letter-spacing:-.6px;color:var(--white);margin-bottom:.5rem;line-height:1.15}
+.card-desc{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:12.5px;color:var(--grey);margin-bottom:2rem;line-height:1.8;max-width:600px}
+.inputs-grid{display:grid;grid-template-columns:1fr 1fr;border:var(--border);margin-bottom:1.5rem}
+.inputs-grid.single{grid-template-columns:1fr}
+.inputs-grid.triple{grid-template-columns:1fr 1fr 1fr}
+.inputs-grid.quad{grid-template-columns:1fr 1fr}
+.input-cell{border-right:var(--border)}
+.input-cell:last-child{border-right:none}
+.input-cell:nth-child(2n):not(:last-child){border-right:var(--border)}
+.input-lbl{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--grey);padding:12px 16px 0;display:block}
+.txt-input{width:100%;background:transparent;border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:14.5px;color:var(--white);padding:6px 16px 14px;letter-spacing:.1px}
+.txt-input::placeholder{color:#3a3a3a}
+.out-lbl{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--grey);margin-bottom:8px}
+.out-wrap{border:var(--border);margin-bottom:1.25rem}
+.out-box{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:12px;color:var(--grey);padding:16px 18px;line-height:1.9;white-space:pre-wrap;word-break:break-word;min-height:100px;border-bottom:var(--border)}
+.copy-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px}
+.copy-hint{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:11px;color:var(--grey);letter-spacing:.8px;text-transform:uppercase}
+.copy-btn{background:transparent;border:var(--border);cursor:pointer;padding:10px 20px;display:flex;align-items:center;gap:10px;transition:all .2s;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.copy-btn:hover{opacity:.75}
+.copy-btn i{font-size:16px}
+.copy-btn.ok{opacity:.5}
+.copy-btn.cc0{color:var(--c0);border-color:var(--c0)}
+.copy-btn.cc1{color:var(--c1);border-color:var(--c1)}
+.copy-btn.cc2{color:var(--c2);border-color:var(--c2)}
+.copy-btn.cc3{color:var(--c3);border-color:var(--c3)}
+.sr-wrap{display:none}
+.sr-wrap.on{display:block}
+.sr-count{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:11px;color:var(--grey);letter-spacing:1px;text-transform:uppercase;padding:14px 2.5rem;border-bottom:var(--border)}
+.no-res{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:14px;color:var(--grey);padding:4rem 2.5rem}
+</style>
+</head>
+<body>
+<div>
+<header class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-left-top">
+      <div class="title">The LinkedIn<br>Shortcut</div>
+      <div class="subtitle">25 Strategic Prompts to Optimize Your Profile, Generate Content,<br>and Scale Your Network. Engineered with Chain-of-Thought (CoT) logic.</div>
+    </div>
+    <div class="hdr-left-bottom">
+      <a class="builder-link" href="https://chris030.gumroad.com/?_gl=1*1o8ehx0*_ga*NzIyOTYxNjY4LjE3Nzc5NjQ2NDU.*_ga_6LJN6D94N6*czE3Nzk4NjUwMzckbzE4JGcxJHQxNzc5ODY1MDM4JGo1OSRsMCRoMA.." target="_blank" rel="noopener">Built by The Digital Shortcut ↗</a>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="meta-row"><span class="meta-tag">Total Prompts</span><span class="meta-val">25</span></div>
+    <div class="meta-row"><span class="meta-tag">Categories</span><span class="meta-val">04</span></div>
+    <div class="meta-row"><span class="meta-tag">Methodology</span><span class="meta-val">CoT Prompting</span></div>
+    <div class="meta-row"><span class="meta-tag">Version</span><span class="meta-val">1.0</span></div>
+  </div>
+</header>
+
+<nav class="nav" role="tablist">
+  <button class="tab-btn active c0" onclick="switchTab(0)"><span class="tab-num">01 —</span><span class="tab-name">Branding</span></button>
+  <button class="tab-btn c1" onclick="switchTab(1)"><span class="tab-num">02 —</span><span class="tab-name">Content</span></button>
+  <button class="tab-btn c2" onclick="switchTab(2)"><span class="tab-num">03 —</span><span class="tab-name">Network</span></button>
+  <button class="tab-btn c3" onclick="switchTab(3)"><span class="tab-num">04 —</span><span class="tab-name">Strategy</span></button>
+</nav>
+
+<div class="search-row">
+  <span class="search-lbl">Search</span>
+  <input class="search-input" type="text" id="srch" placeholder="Filter all 25 prompts..." oninput="doSearch()" aria-label="Search prompts">
+</div>
+
+<div class="sr-wrap" id="srw"><div class="sr-count" id="src"></div><div id="srk"></div></div>
+<div id="tw">
+  <div class="tab-panel active" id="tp0"></div>
+  <div class="tab-panel" id="tp1"></div>
+  <div class="tab-panel" id="tp2"></div>
+  <div class="tab-panel" id="tp3"></div>
+</div>
+</div>
+
+<script>
+const TABS=[
+  {name:"Branding",cards:[
+    {
+      title:"The Value-Driven Headline",
+      desc:"Move from a boring job title to a headline that sells your results and authority.",
+      inputs:[{id:"job",label:"Job Title"},{id:"target",label:"Target Audience"},{id:"result",label:"Core Result"},{id:"service",label:"Your Key Service"}],
+      tpl:(v)=>`<system_role>Act as a LinkedIn Branding Expert.</system_role>
+My current role is ${v.job||"[JOB TITLE]"}, and I help ${v.target||"[TARGET AUDIENCE]"} achieve ${v.result||"[CORE RESULT]"} through my expertise in ${v.service||"[YOUR KEY SERVICE]"}.
+
+Your Task: Generate 5 distinct and high-impact LinkedIn headlines that differentiate me from the competition. Each option should follow a specific strategic approach:
+- Benefit-focused (Outcome for the client)
+- Authority-driven (Focus on your unique methodology or status)
+- Minimalist (Clean, high-level keywords)
+- Curiosity-piquing (A bold statement or unique angle)
+- Direct Service (Clear offer with a call to action)
+
+Strategic Requirements: Use the "|" symbol or bullets to separate ideas. Avoid generic buzzwords like 'passionate' or 'synergy'. Ensure the most critical keywords appear in the first 40 characters so they are visible on mobile notifications.`
+    },
+    {
+      title:"The 'About' Section Storyteller",
+      desc:"Create a bio that builds trust and authority instantly with a compelling high-converting narrative.",
+      inputs:[{id:"milestones",label:"Key Milestones / Experiences"},{id:"audience",label:"Who are you talking to?"},{id:"action",label:"Desired Action (CTA)"}],
+      tpl:(v)=>`<system_role>Act as a Senior Copywriter and Personal Branding Expert.</system_role>
+Your task is to write a compelling LinkedIn 'About' section for me.
+
+Phase Analysis:
+- Analyze my background: ${v.milestones||"[INSERT KEY MILESTONES/EXPERIENCES]"}.
+- Analyze my target audience: ${v.audience||"[WHO ARE YOU TALKING TO?]"}.
+- Identify the core problem my audience faces and how my unique journey provides the solution.
+
+Phase Writing: Write a high-converting bio in the first person using the following strategy:
+- Start with an irresistible opening hook that addresses a specific pain point or a bold industry truth. Avoid introductions like 'Hi, I am...'.
+- Follow up with the transformation, explaining how my expertise leads to specific results.
+- Weave in my key achievements to establish authority without bragging.
+- Add a brief human element about my professional mission or 'why'.
+- End with a clear Call to Action: ${v.action||"[DESIRED ACTION]"}.
+
+Tone and Style: Use short, punchy sentences and a professional yet conversational tone. Eliminate all corporate jargon. Focus on making the first two lines so engaging that readers feel compelled to click 'See More'.`
+    },
+    {
+      title:"The Social Proof Architect",
+      desc:"Get high-quality, specific recommendations that act as sales letters for your profile.",
+      inputs:[{id:"relationship",label:"Client / Colleague / Manager"},{id:"project",label:"Project / Topic"},{id:"skill",label:"Specific Skill"}],
+      tpl:(v)=>`<system_role>Act as a Reputation Manager.</system_role>
+I need to ask a former ${v.relationship||"[CLIENT/COLLEAGUE/MANAGER]"} for a LinkedIn recommendation that doesn't just say "they were great to work with," but actually highlights my unique value.
+
+The Context: We worked together on ${v.project||"[PROJECT/TOPIC]"}. My goal is to showcase my skills in ${v.skill||"[SPECIFIC SKILL, e.g., Strategy, Speed, Problem Solving]"}.
+
+Your Task: Write three different 'Guided Drafts' that I can send to this person to make it as easy as possible for them to recommend me:
+- Result-Oriented Draft: Focus on the ROI and tangible impact I delivered.
+- Leadership and Soft Skills Draft: Focus on my working style and communication.
+- Transformation Draft: Highlight the 'Before vs. After' of our collaboration.
+
+Strategic Requirement: Each draft should be written in a way that sounds like it comes from them, using natural, professional language. Include a short, polite introductory message I can use to send these drafts over. Ensure the tone is authentic and not overly formal.`
+    },
+    {
+      title:"The SEO & Keyword Booster",
+      desc:"Increase your visibility in LinkedIn search results and get found by the right decision-makers.",
+      inputs:[{id:"industry",label:"Your Industry"},{id:"target",label:"Your Target Audience"}],
+      tpl:(v)=>`<system_role>Act as an SEO Specialist for LinkedIn.</system_role>
+I want to optimize my profile for the following industry: ${v.industry||"[YOUR INDUSTRY]"}.
+
+Your Task:
+1. Identify the top 10 high-intent keywords that recruiters or potential clients in ${v.target||"[YOUR TARGET AUDIENCE]"} use when searching for a professional with my skillset. For each keyword, explain the strategic reason why it is essential for my specific niche.
+
+2. Provide a tactical plan on how to integrate these keywords into my Headline, 'About' section, and 'Experience' descriptions without compromising readability or looking like keyword stuffing.
+
+3. Create three optimized 'Job Description' templates for my current and past roles that naturally weave in these keywords. Use the X-Y-Z formula: Accomplished [X] as measured by [Y], by doing [Z].
+
+Strategic Requirements: Focus on "Search Intent" to ensure I attract quality leads. Keep the language professional, authoritative, and perfectly aligned with industry standards.`
+    },
+    {
+      title:"The Personal Brand Voice Finder",
+      desc:"Create a 'Digital Twin' of your writing style so every AI-generated post sounds 100% like you.",
+      inputs:[{id:"sample",label:"Text Sample or List Adjectives (e.g. unfiltered, data-driven, punchy)"}],
+      tpl:(v)=>`<system_role>Act as a Brand Strategist and Linguistic Analyst.</system_role>
+I want to train you to write in my exact voice and tone so that future content remains authentic to my personal brand.
+
+The Source Material: Here is a sample of my writing or a description of my personality: ${v.sample||"[INSERT TEXT SAMPLE OR LIST ADJECTIVES, e.g., Unfiltered, data-driven, slightly sarcastic, professional but punchy]"}.
+
+Your Task:
+- Analyze the provided material for sentence structure, vocabulary preferences, emotional triggers, and rhythm.
+- Create a 'Brand Voice Style Guide' for me. This guide should include:
+  * A definition of my primary tone
+  * A list of 'Power Words' I frequently use
+  * A list of 'Forbidden Words' that sound too corporate or robotic for my brand
+  * Specific rules on how I use formatting like emojis or line breaks
+
+Finally, write a short 50-word introduction about a random business topic using this newly defined voice to prove you have mastered the style.`
+    }
+  ]},
+  {name:"Content",cards:[
+    {
+      title:"The 'Stop-the-Scroll' Hook Generator",
+      desc:"Master the first two lines of your post to ensure readers click 'See more' and engage.",
+      inputs:[{id:"idea",label:"Describe Your Post Idea"}],
+      tpl:(v)=>`<system_role>Act as a Viral Content Strategist.</system_role>
+I have a draft/idea for a LinkedIn post about: ${v.idea||"[DESCRIBE YOUR POST IDEA]"}.
+
+Your Task: Before writing the full post, generate 10 high-impact opening hooks based on the following psychological triggers:
+1. The Negative Hook (Addressing a common mistake)
+2. The Data-Backed Hook (Starting with a surprising stat)
+3. The Narrative Hook (Starting in the middle of a high-stakes moment)
+4. The Contrarian Hook (Challenging a popular industry belief)
+5. The Curiosity Gap Hook (Answering a 'How I did X' question)
+
+Strategic Requirements: Each hook must be under 120 characters to ensure it doesn't get cut off prematurely. Avoid clichés like "In today's fast-paced world." Focus on making the reader feel an immediate emotion or curiosity.`
+    },
+    {
+      title:"The PAS Content Architect",
+      desc:"Convert readers by taking them through a logical emotional journey from a problem to your solution.",
+      inputs:[{id:"topic",label:"Your Topic"},{id:"audience",label:"Target Audience"}],
+      tpl:(v)=>`<system_role>Act as a Direct Response Copywriter.</system_role>
+I want to write a LinkedIn post about ${v.topic||"[YOUR TOPIC]"} targeting ${v.audience||"[TARGET AUDIENCE]"}.
+
+Your Task: Use the PAS (Problem, Agitation, Solution) framework to write a high-engagement post.
+- First, clearly define a painful, specific problem my audience is facing.
+- Next, 'agitate' that problem by explaining the emotional or financial cost of not solving it. Make the reader feel the urgency.
+- Finally, present my solution or insight as the logical bridge to a better result.
+
+Style Guidelines: Write in the first person. Use short, punchy paragraphs (max 2-3 lines each). Ensure the tone is empathetic but authoritative. End the post with a conversational question to drive comments.
+
+Structure: Include a clear 'Hook' at the beginning and a 'Call to Engagement' at the end. Use white space effectively to make the post easy to scan on mobile devices.`
+    },
+    {
+      title:"The Relatability-Authority Bridge",
+      desc:"Share a personal story that builds deep authority and relatability without sounding like a 'humble brag'.",
+      inputs:[{id:"event",label:"Insert Event / Challenge (e.g. a failure, a difficult client)"}],
+      tpl:(v)=>`<system_role>Act as a Master Storyteller.</system_role>
+I want to share a story about a time I experienced ${v.event||"[INSERT EVENT, e.g., a failure, a sudden realization, a difficult client]"}.
+
+Your Task: Write a LinkedIn post using the 'Bridge Framework' to turn this personal moment into a professional lesson:
+- Status Quo: Briefly set the scene of where I was.
+- Conflict / Low Point: Be vulnerable and describe what went wrong or what was challenging.
+- Turning Point: The specific insight or action that changed everything.
+- The Bridge: Explicitly state the lesson that the reader can apply to their own business or life today.
+
+Writing Style: Use a cinematic opening (start in the middle of the action). Keep the tone raw and honest, avoiding corporate perfection. Use a mix of very short sentences and slightly longer ones to create a natural reading rhythm. No emojis in the body copy, only one at the very end.`
+    },
+    {
+      title:"The Value-Dense 'Saveable' Listicle",
+      desc:"Create a post so practical and useful that users feel the need to save it for later reference.",
+      inputs:[{id:"topic",label:"Topic"}],
+      tpl:(v)=>`<system_role>Act as a Content Strategist specialized in educational growth.</system_role>
+I want to provide a list of actionable tips or tools regarding ${v.topic||"[TOPIC]"}.
+
+Your Task: Create a 'Value-Dense Listicle' that follows a 'Zero-Fluff' policy:
+- Start with a headline that promises a specific outcome (e.g., 'How to save 5 hours a week on X').
+- Provide 5 to 7 high-impact points. For each point, include:
+  * One sentence explaining the 'Why'
+  * One sentence explaining the 'How' (the exact action step)
+- Use a consistent formatting style (e.g., bullet points or arrows) to make it highly skimmable.
+
+Closing: End with a 'Bonus Tip' that provides an unexpected extra value. Finish with a call to action asking people to 'Save this post so you can implement it later.'
+
+Style Guidelines: Avoid any introductory paragraphs. Go straight to the value. Use bolding for key terms to guide the reader's eye through the list.`
+    },
+    {
+      title:"The Contrarian Perspective",
+      desc:"Establish yourself as a thought leader by challenging the status quo and sparking high-level debate.",
+      inputs:[{id:"industry",label:"Your Industry"},{id:"belief",label:"Common Belief to Challenge"},{id:"view",label:"Your Opposing View"}],
+      tpl:(v)=>`<system_role>Act as a Thought Leader and Strategic Advisor.</system_role>
+I want to challenge a common belief in the ${v.industry||"[YOUR INDUSTRY]"} industry.
+
+The Context: The common belief is: ${v.belief||"[INSERT COMMON BELIEF, e.g., 'You must work 80 hours to succeed']"}. My opposing view is: ${v.view||"[INSERT YOUR VIEW]"}.
+
+Your Task: Write a LinkedIn post that boldly challenges the status quo:
+- Start with a polarizing hook that immediately identifies the 'common trap' people fall into.
+- Explain why the traditional way of thinking is outdated, ineffective, or even harmful.
+- Provide a clear, logical alternative that offers a 'New Way' of looking at the problem.
+
+Strategic Requirements: Use strong, assertive language and avoid tentative phrases like 'I think' or 'maybe'. Use a 'Vs.' comparison strategy (The Old Way vs. The New Way). End with a call to action: 'Am I the only one who sees it this way, or is the industry ready for a change?'`
+    },
+    {
+      title:"The Visual Carousel Strategy",
+      desc:"Create a slide-by-slide script for a PDF carousel that keeps users swiping until the very last page.",
+      inputs:[{id:"topic",label:"Topic"}],
+      tpl:(v)=>`<system_role>Act as a Visual Content Strategist.</system_role>
+I want to create a high-engagement LinkedIn Carousel about ${v.topic||"[TOPIC]"}.
+
+Your Task: Provide a slide-by-slide outline for a 7-slide carousel:
+- Slide 1 (Cover): High-urgency title and subtitle promising a specific transformation or "Aha!" moment.
+- Slide 2 (The Problem): Visualize the current frustration or a common mistake the reader is making.
+- Slide 3 (The Shift): Introduce the one strategic change or secret they are missing.
+- Slides 4–6 (The Steps): Break down the solution into three actionable, bite-sized steps.
+- Slide 7 (The Finale): Clear Call to Action (CTA) on what to do next.
+
+Strategic Requirements: Provide the exact text for every single slide. Keep the word count per slide under 25 words to ensure readability on mobile. Suggest a visual concept for each slide to guide the design.`
+    },
+    {
+      title:"The Social Proof / Case Study Converter",
+      desc:"Share a client success story or major win as an educational lesson, not an advertisement.",
+      inputs:[{id:"client",label:"Client Name / Project"},{id:"result",label:"Specific Result Achieved"},{id:"area",label:"Core Focus Area"}],
+      tpl:(v)=>`<system_role>Act as a Growth Consultant and Copywriter.</system_role>
+I want to share a success story about ${v.client||"[CLIENT NAME OR PROJECT]"} where we achieved ${v.result||"[SPECIFIC RESULT, e.g., 50% more leads / €100k revenue]"}.
+
+Your Task: Write a LinkedIn post using the 'Show, Don't Tell' methodology:
+- Start with a 'Hard Numbers' hook — put the most impressive result in the very first line.
+- Describe the 'Before' — explain the specific mess, frustration, or bottleneck that existed.
+- Detail the 'Key Pivot' — what was the one strategic or tactical change that made the difference? Keep the 'secret sauce' high-level enough to maintain curiosity.
+- Show the 'After' — describe how the business looks now.
+
+Strategic Requirements: Strictly avoid self-congratulatory words like 'proud', 'honored', or 'blessed'. The tone must be analytical, like a scientist reporting on a successful experiment.
+
+Closing: End with a soft call to action: 'If you are facing a similar bottleneck in ${v.area||"[Area]"}, this approach might be the solution you're looking for.'`
+    },
+    {
+      title:"The Strategic Networking Poll",
+      desc:"Use LinkedIn polls to conduct market research and identify potential leads without being intrusive.",
+      inputs:[{id:"target",label:"Target Audience"},{id:"topic",label:"Topic / Challenge"}],
+      tpl:(v)=>`<system_role>Act as a Market Research Expert.</system_role>
+I want to create a LinkedIn Poll to engage my target audience of ${v.target||"[TARGET AUDIENCE]"} and understand their biggest challenge regarding ${v.topic||"[TOPIC]"}.
+
+Your Task:
+- Create a compelling poll question that addresses a specific pain point or industry trend.
+- Provide 4 distinct answer options that help me categorize the voters based on their current stage or struggle.
+- Write a short, engaging post to accompany the poll. The post should explain 'Why' I am asking this and promise to share the insights/results with everyone who participates.
+
+Strategic Requirements: Ensure the poll doesn't look like a generic 'How are you today?' post. It must feel like a professional inquiry. Include a 'Call to Action' in the text that encourages people to explain their choice in the comments.
+
+Style Guidelines: Keep the introduction brief (max. 3 lines) to keep the focus on the poll itself. Use a tone of professional curiosity.`
+    },
+    {
+      title:"The High-Conversion Curiosity Loop",
+      desc:"Drive high-quality traffic to external links or products without sounding like a desperate salesperson.",
+      inputs:[{id:"product",label:"Product / Newsletter / Link"},{id:"benefit",label:"Primary Benefit"},{id:"link",label:"Your Product Link"}],
+      tpl:(v)=>`<system_role>Act as a Conversion Copywriter.</system_role>
+I want to promote my ${v.product||"[PRODUCT/NEWSLETTER/LINK]"} which helps people to ${v.benefit||"[PRIMARY BENEFIT]"}.
+
+Your Task: Write a LinkedIn post that creates a 'Curiosity Loop':
+- Start with a hook that highlights a surprising result or a hidden mechanism that most people in my industry are ignoring.
+- Build a 'Bridge of Desire' by explaining what is possible once this mechanism is understood.
+- Create the 'Loop' by mentioning that I have documented the exact step-by-step process in my link: ${v.link||"[PRODUCT/LINK]"}, but only for those who are ready to take action.
+
+Strategic Requirements: Do not use generic phrases like 'Link in bio' or 'Click here'. Instead, use a 'Result-Oriented CTA' (e.g., 'You can find the full blueprint here:').
+
+Style Guidelines: The tone should be helpful and exclusive. Use short, fast-paced sentences to build momentum. Ensure the post provides enough value on its own so that even people who don't click feel they learned something.`
+    },
+    {
+      title:"The Content Re-Purpose Machine",
+      desc:"Turn one single idea or long-form text into three distinct LinkedIn formats to maximize reach.",
+      inputs:[{id:"content",label:"Your Core Content / Idea"}],
+      tpl:(v)=>`<system_role>Act as a Content Repurposing Specialist.</system_role>
+I have a core piece of content (a blog post, an email, or a long idea) about: ${v.content||"[INSERT YOUR CONTENT/IDEA]"}.
+
+Your Task: Transform this single input into three different LinkedIn-native posts to be used throughout the week:
+
+Post A — 'Strong Opinion' Post: Focus on the most controversial or polarizing aspect of the content to drive comments.
+
+Post B — 'Bite-Sized Listicle': Extract the most actionable tips and present them in a highly skimmable, 'saveable' format.
+
+Post C — 'Story-Based' Post: Rewrite the core lesson as a personal experience or a 'lessons learned' narrative.
+
+Strategic Requirements: Each post must have a unique hook tailored to its specific format. Ensure the tone remains consistent with my Brand Voice. Ensure that someone who reads all three posts doesn't feel like they are seeing the same content twice.`
+    }
+  ]},
+  {name:"Network",cards:[
+    {
+      title:"The Thoughtful Commenter",
+      desc:"Write comments that provide so much value that they get liked, pinned, and drive people to visit your profile.",
+      inputs:[{id:"topic",label:"Post Topic or Paste Post Text"}],
+      tpl:(v)=>`<system_role>Act as a Thought Leader and Strategic Peer.</system_role>
+I want to leave a high-value comment on a LinkedIn post about: ${v.topic||"[INSERT POST TOPIC OR COPY/PASTE THE POST TEXT]"}.
+
+Your Task: Instead of a generic "Great post!", generate three different comment options that position me as an expert:
+
+Option 1 — The 'Insightful Add-on': Add a professional point or a fresh perspective that the original author missed.
+
+Option 2 — The 'Respectful Challenger': Gently challenge one aspect of the post with a logical counter-argument to spark a high-level debate.
+
+Option 3 — The 'Practical Example': Share a brief, 2-line case study or real-world example that validates the author's point.
+
+Strategic Requirements: Each comment must start by acknowledging a specific point from the post (to prove I actually read it). Keep the tone supportive but professional. Maximum 3-4 sentences per comment. Ensure the language is punchy and invites the author or other readers to reply to me.`
+    },
+    {
+      title:"The Non-Awkward DM Opener",
+      desc:"Start a conversation with a new connection that feels natural, personalized, and earns a response.",
+      inputs:[{id:"name",label:"Prospect Name"},{id:"role",label:"Job Title / Role"},{id:"reason",label:"Reason for Connecting"}],
+      tpl:(v)=>`<system_role>Act as a Networking Strategist.</system_role>
+I want to send a personalized message to ${v.name||"[NAME]"}, who is a ${v.role||"[JOB TITLE/ROLE]"}.
+
+The Context: I just connected with them because ${v.reason||"[REASON, e.g., I liked their post about X / We are both in the same group]"}.
+
+Your Task: Write three different 'Icebreaker' messages that avoid being salesy or generic:
+
+1. The 'Observation Opener': Mention a specific detail from their profile or a recent post and ask a thoughtful question about it.
+
+2. The 'Common Ground Opener': Highlight a shared interest or connection and explain why you're reaching out to them specifically.
+
+3. The 'Value-First Opener': Mention a resource, article, or insight that is highly relevant to their current role and share it without asking for anything in return.
+
+Strategic Requirements: Keep the messages under 300 characters. Do not use formal greetings like 'Dear Sir/Madam'. Use a conversational, peer-to-peer tone. The goal is a reply, not a sale.`
+    },
+    {
+      title:"The Value-Driven Follow-Up",
+      desc:"Re-ignite a conversation that has gone cold by providing additional value instead of just 'checking in'.",
+      inputs:[{id:"name",label:"Name"},{id:"topic",label:"Previous Conversation Topic"}],
+      tpl:(v)=>`<system_role>Act as a Relationship Manager.</system_role>
+I had a conversation with ${v.name||"[NAME]"} about ${v.topic||"[TOPIC]"}, but the chat has gone quiet for a few days.
+
+Your Task: Write a follow-up message that feels like a natural continuation of our professional relationship.
+
+Instead of asking if they saw my last message, use the 'Relevant Resource' strategy: Find a reason to reach out by sharing a recent article, a post, or an insight that directly relates to our previous conversation.
+
+Structure:
+- Start with: 'I just came across this and thought of our conversation about [Topic]...'
+- Briefly explain why this is relevant to them.
+- End with a 'Low-Pressure' question like: 'Curious to hear your thoughts on this when you have a moment.'
+
+Strategic Requirements: No pressure, no deadlines, and no 'checking in' language. The tone must be 100% helpful. Keep it under 4 sentences.`
+    },
+    {
+      title:"The Referral Solicitor",
+      desc:"Ask an existing connection for an introduction to a third party in a professional, low-pressure way.",
+      inputs:[{id:"contact",label:"Your Contact Name"},{id:"target",label:"Target Person / Role"},{id:"company",label:"Company Name"}],
+      tpl:(v)=>`<system_role>Act as a Business Development Consultant.</system_role>
+I want to ask my contact, ${v.contact||"[CONTACT NAME]"}, for an introduction to ${v.target||"[TARGET PERSON/ROLE]"} at ${v.company||"[COMPANY]"}.
+
+Your Task: Write a short, professional message requesting a 'Warm Introduction':
+
+1. Acknowledge the strength of my relationship with ${v.contact||"[CONTACT NAME]"}.
+2. Clearly state why I am interested in connecting with ${v.target||"[TARGET PERSON]"} — focus on a specific synergy or value I can provide them.
+3. Provide a 'Forwardable Blurb' — a 2-3 sentence description of who I am and what I do that my contact can simply copy and paste to the target person.
+
+Strategic Requirements: Use a 'Double Opt-In' approach — explicitly tell my contact there is 'no pressure' and 'no worries if you don't feel comfortable making the intro.' This preserves the relationship. Keep the entire message concise and professional.`
+    },
+    {
+      title:"The 'Common Ground' Connector",
+      desc:"Write connection requests that get accepted by high-level prospects by highlighting shared experiences.",
+      inputs:[{id:"name",label:"Prospect Name"},{id:"role",label:"Role / Industry"},{id:"detail",label:"Shared Experience / Interest / Group"}],
+      tpl:(v)=>`<system_role>Act as a Relationship Builder.</system_role>
+I want to connect with ${v.name||"[NAME]"}, a ${v.role||"[ROLE/INDUSTRY]"}, whom I don't know personally yet.
+
+The Context: We share the following common ground: ${v.detail||"[INSERT SHARED DETAIL, e.g., Same University, Both follow 'Author X', Both members of 'Group Y', recently attended the same Webinar]"}.
+
+Your Task: Write three distinct, short connection request messages (under 300 characters):
+
+1. The Shared Group/Event Approach: Mention the specific community or event and ask for their perspective on a recent trend there.
+
+2. The Shared Interest/Content Approach: Mention a specific piece of content or a person you both follow and why their recent post made you think of this person's profile.
+
+3. The 'Alumni/Background' Approach: Use a nostalgic or professional shared background to build immediate rapport.
+
+Strategic Requirements: Avoid "I'd like to add you to my professional network." Instead, focus on "I saw we both [Shared Detail] and wanted to reach out." Keep it light, friendly, and non-transactional.`
+    }
+  ]},
+  {name:"Strategy",cards:[
+    {
+      title:"The Analytics Interpreter",
+      desc:"Turn raw LinkedIn post data into actionable insights to refine your content strategy and double engagement.",
+      inputs:[{id:"target",label:"Target Audience"}],
+      tpl:(v)=>`<system_role>Act as a Senior Data Analyst specializing in Social Media ROI.</system_role>
+I will provide you with the performance data of my last 5-10 LinkedIn posts (including views, likes, comments, and shares).
+
+Your Task: Analyze the data and provide a "Content Health Report":
+- Identify the 'Top Performer' and explain why it likely resonated (Topic, Hook, or Format?).
+- Identify the 'Underperformer' and suggest three specific improvements.
+- Detect patterns in the engagement: Which topics triggered the most comments? Which ones only got passive likes?
+
+Strategic Recommendation: Based on this analysis, suggest the 3 most important content themes I should focus on for next month to maximize my reach among ${v.target||"[TARGET AUDIENCE]"}.
+
+Style: Use a professional, data-driven tone. Present the findings in a clear executive summary format.`
+    },
+    {
+      title:"The 'Dream 100' Outreach Strategy",
+      desc:"Create a systematic plan to get on the radar of your top 100 dream clients or partners.",
+      inputs:[{id:"industry",label:"Industry Sector"},{id:"role",label:"Target Role"},{id:"niche",label:"Specific Niche"}],
+      tpl:(v)=>`<system_role>Act as a High-Level Sales Strategist.</system_role>
+I have identified a list of key decision-makers I want to build a relationship with in the ${v.industry||"[INSERT INDUSTRY]"} sector.
+
+Your Task: Design a multi-stage engagement plan that moves me from being a stranger to a trusted peer for my target person who holds the role of ${v.role||"[INSERT TARGET ROLE]"}.
+
+Formulate a strategy that:
+1. Begins with invisible touchpoints like profile visits and meaningful engagement on their specific content.
+2. Describes how to transition into visible interaction by providing insightful perspectives on their shared topics.
+3. Crafts a specific narrative for the first direct contact that references their recent achievements or public statements to prove genuine interest.
+4. Explains how to maintain this connection over several weeks by offering relevant industry insights.
+
+Strategic Requirements: Focus on the long game of relationship building. Ensure the tone is peer-to-peer and respectful of their status. Avoid any typical sales language or immediate requests for meetings. Focus specifically on how to reach someone in the ${v.niche||"[INSERT NICHE]"} space.`
+    },
+    {
+      title:"The LinkedIn SEO Optimizer",
+      desc:"Optimize your entire profile with strategic keywords to dominate search results when prospects look for your expertise.",
+      inputs:[{id:"niche",label:"Your Niche"},{id:"industry",label:"Industry Sector"}],
+      tpl:(v)=>`<system_role>Act as a LinkedIn SEO Expert.</system_role>
+I want to optimize the secondary sections of my profile to ensure maximum search visibility for my niche which is ${v.niche||"[INSERT NICHE]"}.
+
+Your Task:
+1. Provide a strategy for optimizing my Experience section by rewriting my current job descriptions into achievement-oriented, keyword-rich summaries that appeal to the LinkedIn search algorithm.
+
+2. Suggest how to strategically select and order my top 50 skills to align with the search habits of recruiters and potential clients in the ${v.industry||"[INSERT INDUSTRY]"} sector.
+
+3. Create a plan for the Featured section by recommending which types of media or posts I should pin to reinforce my primary keywords and provide social proof.
+
+4. Explain how to use the 'Project' and 'Volunteer' sections to add additional keyword density without looking cluttered.
+
+Strategic Requirements: Focus on the technical backend of LinkedIn search. Ensure that every section reinforces the same core keywords to create a unified 'Search Persona' that the algorithm can easily categorize.`
+    },
+    {
+      title:"The Ghostwriter Persona Mimic",
+      desc:"Train the AI to perfectly replicate your unique writing style, tone, and professional voice from real content samples.",
+      inputs:[{id:"title",label:"Your Job Title"},{id:"industry",label:"Industry"},{id:"target",label:"Target Audience"}],
+      tpl:(v)=>`<system_role>Act as a Professional Ghostwriter.</system_role>
+I am providing you with several samples of my own writing which I have pasted here: [PASTE 3-5 SAMPLES OF YOUR OWN RECENT POSTS OR ARTICLES HERE].
+
+Your Task: Analyze these samples to identify my unique linguistic fingerprint including my preferred sentence length, the level of formality I use, and the specific industry jargon I employ in my role as ${v.title||"[INSERT JOB TITLE]"}.
+
+Describe the emotional tone of my writing and the way I transition between ideas. Create a detailed "Voice Persona" based on this analysis that you will use for all future content creation for my brand in the ${v.industry||"[INSERT INDUSTRY]"} sector.
+
+Once you have established this persona, rewrite the following core message using my exact voice: [INSERT THE TOPIC OR DRAFT YOU WANT TO REWRITE].
+
+Strategic Requirements: The goal is to eliminate the robotic AI tone and replace it with a style that is indistinguishable from my own hand. Focus on the subtle nuances of my vocabulary and the way I address my target audience of ${v.target||"[INSERT TARGET AUDIENCE]"}.`
+    },
+    {
+      title:"The 30-Day Content Roadmap",
+      desc:"Generate a complete, sustainable content strategy for a full month to ensure consistency and brand building.",
+      inputs:[{id:"title",label:"Your Job Title"},{id:"industry",label:"Industry Sector"},{id:"target",label:"Target Audience"}],
+      tpl:(v)=>`<system_role>Act as a Content Marketing Director.</system_role>
+I need a strategic 30-day content calendar for my LinkedIn presence as a ${v.title||"[INSERT JOB TITLE]"} operating in the ${v.industry||"[INSERT INDUSTRY]"} sector.
+
+Your Task: Create a roadmap that balances different content pillars to keep my audience engaged and move them through the sales funnel:
+- Distribute the workload with a mix of: educational authority posts, personal story posts, and high-engagement polls or contrarian views.
+- Outline a weekly rhythm that builds momentum — starting with broad awareness early in the week and moving toward specific calls to action by Friday.
+- Suggest which categories of posts I should focus on for each day to maintain a high quality of writing without spending hours on ideation.
+
+Strategic Requirements: Ensure the plan is sustainable and avoids burnout while focusing on my core goal of attracting ${v.target||"[INSERT TARGET AUDIENCE]"}. Provide a clear objective for each week so I can track my progress beyond just likes and views.`
+    }
+  ]}
+];
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function buildCard(card,ti,ci,pfx){
+  const cid=`${pfx}${ti}_${ci}`;
+  const n=card.inputs.length;
+  let gridClass='inputs-grid';
+  if(n===1) gridClass+=' single';
+  else if(n===3) gridClass+=' triple';
+  else if(n===4) gridClass+=' quad';
+
+  let ig=`<div class="${gridClass}">`;
+  card.inputs.forEach((inp,idx)=>{
+    const needsBorder=(n===3&&idx<2)||(n===4&&(idx%2===0))||(n===2&&idx===0);
+    const style=needsBorder?'':'';
+    ig+=`<div class="input-cell" style="${n===3&&idx===2?'border-right:none':''}"><span class="input-lbl">${inp.label}</span><input class="txt-input" id="${cid}_${inp.id}" type="text" placeholder="— enter ${inp.label.toLowerCase().replace(/ \(.*\)$/, '')}" oninput="upd('${cid}',${ti},${ci})"></div>`;
+  });
+  ig+=`</div>`;
+
+  return `<div class="card">
+  <div class="card-aside"><span class="card-num-vert">${String(ci+1).padStart(2,'0')}</span></div>
+  <div class="card-body">
+    <div class="card-cat">${TABS[ti].name}</div>
+    <div class="card-title">${card.title}</div>
+    <div class="card-desc">${card.desc}</div>
+    ${ig}
+    <div class="out-lbl">Generated Prompt</div>
+    <div class="out-wrap">
+      <div class="out-box" id="${cid}_out">${esc(card.tpl({}))}</div>
+      <div class="copy-bar">
+        <span class="copy-hint">Click to copy the full prompt →</span>
+        <button class="copy-btn cc${ti}" id="${cid}_btn" onclick="cp('${cid}',${ti},${ci})" aria-label="Copy prompt">
+          <i class="ti ti-copy" aria-hidden="true"></i>
+          <span id="${cid}_lbl">Copy Prompt</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>`;
+}
+
+function upd(cid,ti,ci){
+  const card=TABS[ti].cards[ci];
+  const v={};
+  card.inputs.forEach(inp=>{const el=document.getElementById(`${cid}_${inp.id}`);v[inp.id]=el?el.value.trim():'';});
+  document.getElementById(`${cid}_out`).textContent=card.tpl(v);
+}
+
+function cp(cid,ti,ci){
+  const text=document.getElementById(`${cid}_out`).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.getElementById(`${cid}_btn`);
+    const lbl=document.getElementById(`${cid}_lbl`);
+    btn.classList.add('ok');
+    btn.querySelector('i').className='ti ti-check';
+    lbl.textContent='Copied!';
+    setTimeout(()=>{btn.classList.remove('ok');btn.querySelector('i').className='ti ti-copy';lbl.textContent='Copy Prompt';},2000);
+  });
+}
+
+function switchTab(idx){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+
+function doSearch(){
+  const q=document.getElementById('srch').value.trim().toLowerCase();
+  const srw=document.getElementById('srw'),tw=document.getElementById('tw'),srk=document.getElementById('srk'),src=document.getElementById('src');
+  if(!q){srw.classList.remove('on');tw.style.display='';return;}
+  tw.style.display='none';srw.classList.add('on');
+  let html='',count=0;
+  TABS.forEach((tab,ti)=>{
+    tab.cards.forEach((card,ci)=>{
+      if((card.title+' '+card.desc+' '+tab.name+' '+card.inputs.map(i=>i.label).join(' ')).toLowerCase().includes(q)){
+        html+=buildCard(card,ti,ci,'s'+count);count++;
+      }
+    });
+  });
+  src.textContent=`${count} Result${count!==1?'s':''} — "${q.toUpperCase()}"`;
+  srk.innerHTML=count?html:`<div class="no-res">No prompts found for "${q}"</div>`;
+}
+
+TABS.forEach((tab,ti)=>{
+  document.getElementById(`tp${ti}`).innerHTML=tab.cards.map((c,ci)=>buildCard(c,ti,ci,'m')).join('');
+});
+</script>
+</body>
+</html>
